@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Computer Quiz</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 20px;
+			font-family: Arial, sans-serif;
+			background: #0f172a;
+			color: white;
+			text-align: center;
+		}
+
+		h1 { color: #38bdf8; }
+
+		#slotContainer {
+			display: grid;
+			grid-template-columns: repeat(5, 80px);
+			justify-content: center;
+			gap: 15px;
+			margin: 30px auto;
+		}
+
+		.slot, .option, button {
+			cursor: pointer;
+		}
+
+		.slot {
+			width: 80px;
+			height: 80px;
+			border: 0;
+			border-radius: 50%;
+			background: #f59e0b;
+			color: white;
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		.slot.used { background: #dc2626; }
+
+		#questionPage {
+			width: min(80%, 800px);
+			margin: 30px auto;
+			padding: 25px;
+			background: white;
+			color: #111827;
+			border-radius: 12px;
+		}
+
+		#questionPage[hidden], #resultPage[hidden] {
+			display: none;
+		}
+
+		#questionImage {
+			display: block;
+			width: min(100%, 320px);
+			height: 180px;
+			object-fit: contain;
+			margin: 15px auto;
+		}
+
+		.option {
+			display: block;
+			width: 80%;
+			margin: 10px auto;
+			padding: 12px;
+			border: 1px solid #ccc;
+			border-radius: 8px;
+			background: #f8fafc;
+			color: #111827;
+			text-align: left;
+			font-size: 16px;
+		}
+
+		.option.selected {
+			border-color: #f59e0b;
+			background: #fef3c7;
+		}
+
+		#participantName {
+			width: min(90%, 320px);
+			padding: 12px;
+			margin: 10px;
+			box-sizing: border-box;
+		}
+
+		#submitQuizButton {
+			background: #16a34a;
+		}
+
+		#resultPage {
+			width: min(90%, 600px);
+			margin: 30px auto;
+			padding: 25px;
+			background: white;
+			color: #111827;
+			border-radius: 12px;
+		}
+
+		#leaderboard {
+			text-align: left;
+		}
+
+		.leader {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+
+		#timer {
+			color: #dc2626;
+			font-size: 24px;
+			font-weight: bold;
+		}
+
+		.action {
+			padding: 12px 20px;
+			margin: 8px;
+			border: 0;
+			border-radius: 8px;
+			background: #2563eb;
+			color: white;
+		}
+
+		@media (max-width: 600px) {
+			#slotContainer { grid-template-columns: repeat(3, 70px); }
+			.slot { width: 70px; height: 70px; }
+			#questionPage { width: 90%; box-sizing: border-box; }
+			.option { width: 95%; box-sizing: border-box; }
+		}
+	</style>
+</head>
+<body>
+	<h1>Computer Quiz</h1>
+	<div id="questionPage">
+		<input id="participantName" type="text" placeholder="Enter your name" maxlength="40">
+		<h2 id="questionTitle"></h2>
+		<p id="questionText"></p>
+		<img id="questionImage" alt="Question image" hidden>
+		<div id="questionOptions"></div>
+		<p id="timer">Time remaining: 30s</p>
+		<button id="nextButton" class="action" type="button" disabled>Next</button>
+		<button id="submitQuizButton" class="action" type="button" hidden>Submit Quiz</button>
+		<button id="backButton" class="action" type="button">Previous</button>
+	</div>
+
+	<div id="resultPage" hidden>
+		<h2>Final Top 10</h2>
+		<p id="resultMessage"></p>
+		<div id="leaderboard"></div>
+	</div>
+
+	<script>
+		const questions = [
+			["Which OS concepts allows a proccess to temporarily move from RAM to disk?", ["Paging", "Swapping", "Fragmentation", "Spooling"], "Swapping"],
+			["Which data structure is primarily used in breadth first search(BSF)?", ["Stack", "Queue", "Heap", "Linked List"], "Queue"],
+			["Which normal form eliminates partial dependencies?", ["1NF", "2NF", "3NF", "BCNF"], "2NF"],
+			["Which IP address belongs to the private IPV4 range?", ["8.8.8.8", "172.16.10.5", "1.1.1.1", "203.0.113.5"], "172.16.10.5"],
+			["Which cyber attack attempts to over whelm a service with massive traffic?", ["DDoS", "Phishing", "Malware", "Spyware"], "DDoS"],
+			["Which protocol is responsible for mapping an IP  address to a MAC address?", ["DNS", "ARP", "DHCP", "FTP"], "ARP"],
+			["Which cloud models provides ready-to-use software through the internet?", ["laaS", "PaaS", "IaaS", "SaaS"], "SaaS"],
+			["Which topology has a central connecting device?", ["Star", "Bus", "Ring", "Mesh"], "Star"],
+			["Which database key uniquely identifies each record in a table?", ["Primary Key", "Foreign Key", "Unique Key", "Index"], "Primary Key"],
+			["Which raid level uses disk mirroring?", ["RAID 0", "RAID 10", "RAID 5", "RAID 1"], "RAID 1"],
+			["Which java keyword is used to create a subclass relationship?", ["extends", "implements", "inherits", "overloads"], "extends"],
+			["Which algorithm is generally used to find a minimum spanning tree?", ["Diskstra", "BFS", "DFS", "Kruskal"], "Kruskal"],
+			["Which normal form removes transitive dependencies?", ["1NF", "2NF", "3NF", "BCNF"], "3NF"],
+			["Which technology is associated with distributed leaders?", ["Bluetooth", "HTML", "JPEG", "block Chain"], "block Chain"],
+			["What does RAID primarily provide in computer storage system?", ["Faster CPU proccessing", "Internet security", "Data redundancy and for improved storage performance	", "background"], "Data redundancy and for improved storage performance	"],
+			["Which database index structure is particularly well suited for range queries?", ["B-tree", "Stack", "Hash table", "queue"], "B-tree"],
+			["Which concepts allows a program to continue executing while watting for an I/O operation to complete?", ["Bussy waiting only", "Asynchronous I/O", "static linking", "dynamic linking"], "Asynchronous I/O"],
+			["What is the primary purpose of a hypervisor?", ["Encrypt files", "Route pockets", "Array", "Manage virtual machines"], "Manage virtual machines"],
+			["Which protocol is used to synchronize clocks across computer network?", ["SNMP", "ICMP", "TCP", "NTP"], "NTP"],
+			["Which attacks uses many compromised device to overwhelm a server?", ["Phishing", "Key logging", "DDoS", "Spoofing"], "DDoS"],
+			["Which CPU scheduling algorithm may cause starvation?", ["FCFS", "Round Robin", "Priority Scheduling", "FIFO"], "Priority Scheduling"],
+			["Which cryptograpic proprety ensures data has not been modified?", ["Confidentiality", "Integrity", "Availability", "Authentication"], "Integrity"],
+			["A page fault occures when a requred page is not found in?", ["In CPU register", "In cache", "In main memory", "Read only"], "In main memory"],
+			["Which SQL command combines rows from multiple tables?", ["UNION", "JOIN", "SELECT", "INSERT"], "JOIN"],
+			["Which technology provides a distributed, tamper-resistant ledger?", ["Blockchain", "Modem", "Firewall", "Bridge"], "Blockchain"],
+			["Which device prints documents?", ["Scanner", "Printer", "Router", "Modem"], "Printer"],
+			["Which device scans paper documents?", ["Scanner", "Printer", "Monitor", "Speaker"], "Scanner"],
+			["What is malware?", ["Helpful software", "Malicious software", "A computer cable", "A web browser"], "Malicious software"],
+			["Which is a web browser?", ["Chrome", "Windows", "Linux", "Android"], "Chrome"],
+			["Which is a search engine?", ["Google", "Bluetooth", "Ethernet", "Windows"], "Google"],
+			["What does Wi-Fi provide?", ["Wireless network access", "Extra storage", "Power supply", "Printer ink"], "Wireless network access"]
+		];
+
+		const questionPage = document.getElementById('questionPage');
+		const questionTitle = document.getElementById('questionTitle');
+		const questionText = document.getElementById('questionText');
+		const questionImage = document.getElementById('questionImage');
+		const questionOptions = document.getElementById('questionOptions');
+		const timer = document.getElementById('timer');
+		const backButton = document.getElementById('backButton');
+		const nextButton = document.getElementById('nextButton');
+		const participantName = document.getElementById('participantName');
+		const submitQuizButton = document.getElementById('submitQuizButton');
+		const resultPage = document.getElementById('resultPage');
+		const resultMessage = document.getElementById('resultMessage');
+		const leaderboard = document.getElementById('leaderboard');
+		const apiBaseUrl = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
+		const selectedAnswers = new Map();
+		const expiredQuestions = new Set();
+		let currentQuestionIndex = 0;
+		let timerInterval;
+		let disqualified = false;
+		const loggedInUser = new URLSearchParams(window.location.search).get('user');
+		if (loggedInUser) {
+			participantName.value = loggedInUser;
+			participantName.readOnly = true;
+		}
+
+		function disqualifyParticipant() {
+			if (disqualified || !loggedInUser || !document.hidden) {
+				return;
+			}
+			disqualified = true;
+			clearInterval(timerInterval);
+			localStorage.setItem(`quizDisqualified:${loggedInUser}`, 'true');
+			questionPage.hidden = true;
+			resultMessage.textContent = 'Disqualified: leaving the quiz tab is not allowed.';
+			leaderboard.replaceChildren();
+			resultPage.hidden = false;
+			nextButton.disabled = true;
+			submitQuizButton.disabled = true;
+			backButton.disabled = true;
+		}
+
+		function showQuestion(questionIndex) {
+			if (disqualified) {
+				return;
+			}
+			const [question, options] = questions[questionIndex];
+			const questionNumber = questionIndex + 1;
+			questionTitle.textContent = `Question ${questionNumber} of ${questions.length}`;
+			questionText.textContent = question;
+			questionImage.hidden = true;
+			questionOptions.replaceChildren();
+			clearInterval(timerInterval);
+			let timeRemaining = 30;
+			timer.textContent = `Time remaining: ${timeRemaining}s`;
+			options.forEach((option) => {
+				const optionButton = document.createElement('button');
+				optionButton.className = 'option';
+				optionButton.type = 'button';
+				optionButton.disabled = expiredQuestions.has(questionNumber);
+				optionButton.textContent = option;
+				if (selectedAnswers.get(questionNumber) === option) {
+					optionButton.classList.add('selected');
+				}
+				optionButton.addEventListener('click', () => {
+					questionOptions.querySelectorAll('.option').forEach((item) => item.classList.remove('selected'));
+					optionButton.classList.add('selected');
+					selectedAnswers.set(questionNumber, option);
+					nextButton.disabled = false;
+				});
+				questionOptions.append(optionButton);
+			});
+			nextButton.hidden = questionIndex === questions.length - 1;
+			submitQuizButton.hidden = questionIndex !== questions.length - 1;
+			nextButton.disabled = !expiredQuestions.has(questionNumber) && !selectedAnswers.has(questionNumber);
+			submitQuizButton.disabled = questionIndex !== questions.length - 1 || !participantName.value.trim();
+			backButton.hidden = questionIndex === 0;
+			timerInterval = setInterval(() => {
+				timeRemaining -= 1;
+				timer.textContent = `Time remaining: ${timeRemaining}s`;
+				if (timeRemaining === 0) {
+					clearInterval(timerInterval);
+					expiredQuestions.add(questionNumber);
+					questionOptions.querySelectorAll('.option').forEach((optionButton) => {
+						optionButton.disabled = true;
+					});
+					timer.textContent = 'Time is over. Click Next to continue.';
+					nextButton.disabled = false;
+					submitQuizButton.disabled = questionIndex !== questions.length - 1 || !participantName.value.trim();
+				}
+			}, 1000);
+		}
+
+		async function showResults() {
+			if (disqualified) {
+				return;
+			}
+			clearInterval(timerInterval);
+			const name = participantName.value.trim();
+			const score = questions.reduce((total, [, , answer], index) => {
+				return total + (selectedAnswers.get(index + 1) === answer ? 1 : 0);
+			}, 0);
+			await fetch(`${apiBaseUrl}/api/results`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ name, score })
+			});
+			leaderboard.replaceChildren();
+			resultMessage.textContent = 'Quiz submitted. Your result will be reviewed by the administrator.';
+			questionPage.hidden = true;
+			resultPage.hidden = false;
+		}
+
+		participantName.addEventListener('input', () => {
+			submitQuizButton.disabled = !participantName.value.trim();
+		});
+		nextButton.addEventListener('click', () => {
+			clearInterval(timerInterval);
+			currentQuestionIndex += 1;
+			nextButton.disabled = !selectedAnswers.has(currentQuestionIndex + 1);
+			showQuestion(currentQuestionIndex);
+		});
+		submitQuizButton.addEventListener('click', showResults);
+		backButton.addEventListener('click', () => {
+			clearInterval(timerInterval);
+			currentQuestionIndex = Math.max(0, currentQuestionIndex - 1);
+			showQuestion(currentQuestionIndex);
+		});
+		document.addEventListener('visibilitychange', disqualifyParticipant);
+		if (loggedInUser && localStorage.getItem(`quizDisqualified:${loggedInUser}`) === 'true') {
+			disqualified = true;
+			questionPage.hidden = true;
+			resultMessage.textContent = 'Disqualified: this participant already left the quiz tab.';
+			resultPage.hidden = false;
+		}
+		showQuestion(0);
+	</script>
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Computer Quiz - Multiple Users</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .question {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .option {
+            margin: 8px 0;
+        }
+
+        #quizPage,
+        #resultPage {
+            display: none;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .score {
+            font-size: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage">
+
+        <h1>Computer Quiz</h1>
+
+        <h2>Participant Login</h2>
+
+        <label>Username</label>
+
+        <input type="text" id="loginUsername">
+
+
+        <label>Password</label>
+
+        <input type="password" id="loginPassword">
+
+        <button onclick="login()">
+            Login
+        </button>
+
+        <button type="button" onclick="adminLogin()">
+            Admin Login
+        </button>
+
+        <p id="loginError" class="error"></p>
+
+    </div>
+
+
+    <!-- QUIZ PAGE -->
+    <div id="quizPage">
+
+        <h2>Computer Quiz</h2>
+
+        <p>
+            Participant:
+            <strong id="currentUser"></strong>
+        </p>
+
+        <form id="quizForm">
+
+            <!-- Question 1 -->
+            <div class="question">
+
+                <p>
+                    <strong>1. What does CPU stand for?</strong>
+                </p>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q1"
+                           value="A">
+                    Central Processing Unit
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q1"
+                           value="B">
+                    Computer Personal Unit
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q1"
+                           value="C">
+                    Central Program Utility
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q1"
+                           value="D">
+                    Computer Processing Utility
+                </div>
+
+            </div>
+
+
+            <!-- Question 2 -->
+            <div class="question">
+
+                <p>
+                    <strong>2. Which is an operating system?</strong>
+                </p>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q2"
+                           value="A">
+                    HTML
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q2"
+                           value="B">
+                    Windows
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q2"
+                           value="C">
+                    SQL
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q2"
+                           value="D">
+                    HTTP
+                </div>
+
+            </div>
+
+
+            <!-- Question 3 -->
+            <div class="question">
+
+                <p>
+                    <strong>
+                        3. Which data structure follows LIFO?
+                    </strong>
+                </p>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q3"
+                           value="A">
+                    Queue
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q3"
+                           value="B">
+                    Array
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q3"
+                           value="C">
+                    Stack
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q3"
+                           value="D">
+                    Tree
+                </div>
+
+            </div>
+
+
+            <!-- Question 4 -->
+            <div class="question">
+
+                <p>
+                    <strong>
+                        4. Which language is used to style web pages?
+                    </strong>
+                </p>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q4"
+                           value="A">
+                    Python
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q4"
+                           value="B">
+                    CSS
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q4"
+                           value="C">
+                    Java
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q4"
+                           value="D">
+                    SQL
+                </div>
+
+            </div>
+
+
+            <!-- Question 5 -->
+            <div class="question">
+
+                <p>
+                    <strong>
+                        5. What is the full form of RAM?
+                    </strong>
+                </p>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q5"
+                           value="A">
+                    Random Access Memory
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q5"
+                           value="B">
+                    Read Access Memory
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q5"
+                           value="C">
+                    Random Application Machine
+                </div>
+
+                <div class="option">
+                    <input type="radio"
+                           name="q5"
+                           value="D">
+                    Read Application Memory
+                </div>
+
+            </div>
+
+
+            <button type="button"
+                    onclick="submitQuiz()">
+                Submit Quiz
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- RESULT PAGE -->
+    <div id="resultPage">
+
+        <h2>Quiz Result</h2>
+
+        <p>
+            Participant:
+            <strong id="resultUser"></strong>
+        </p>
+
+        <p class="score" id="score"></p>
+
+        <button onclick="nextParticipant()">
+            Next Participant
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // Edit these credentials directly in the program.
+    const users = [
+        { username: "admin", password: "Admin@123", completed: false, score: 0 },
+        { username: "TEAM1", password: "team01", completed: false, score: 0 },
+        { username: "TEAM2", password: "team02", completed: false, score: 0 },
+        { username: "TEAM3", password: "team03", completed: false, score: 0 },
+        { username: "TEAM4", password: "team04", completed: false, score: 0 },
+        { username: "TEAM5", password: "team05", completed: false, score: 0 },
+        { username: "TEAM6", password: "team06", completed: false, score: 0 },
+        { username: "TEAM7", password: "team07", completed: false, score: 0 },
+        { username: "TEAM8", password: "team08", completed: false, score: 0 },
+        { username: "TEAM9", password: "team09", completed: false, score: 0 },
+        { username: "TEAM10", password: "team10", completed: false, score: 0 },
+        { username: "TEAM11", password: "team11", completed: false, score: 0 },
+        { username: "TEAM12", password: "team12", completed: false, score: 0 },
+        { username: "TEAM13", password: "team13", completed: false, score: 0 },
+        { username: "TEAM14", password: "team14", completed: false, score: 0 },
+        { username: "TEAM15", password: "team15", completed: false, score: 0 },
+        { username: "TEAM16", password: "team16", completed: false, score: 0 },
+        { username: "TEAM17", password: "team17", completed: false, score: 0 },
+        { username: "TEAM18", password: "team18", completed: false, score: 0 },
+        { username: "TEAM19", password: "team19", completed: false, score: 0 },
+        { username: "TEAM20", password: "team20", completed: false, score: 0 },
+        { username: "TEAM21", password: "team21", completed: false, score: 0 },
+        { username: "TEAM22", password: "team22", completed: false, score: 0 },
+        { username: "TEAM23", password: "team23", completed: false, score: 0 },
+        { username: "TEAM24", password: "team24", completed: false, score: 0 },
+        { username: "TEAM25", password: "team25", completed: false, score: 0 },
+        { username: "TEAM26", password: "team26", completed: false, score: 0 },
+        { username: "TEAM27", password: "team27", completed: false, score: 0 },
+        { username: "TEAM28", password: "team28", completed: false, score: 0 },
+        { username: "TEAM29", password: "team29", completed: false, score: 0 },
+        { username: "TEAM30", password: "team30", completed: false, score: 0 }
+    ];
+
+    // Current logged-in user
+    let currentUser = null;
+
+
+    // Login
+    function login() {
+
+        const username =
+            document.getElementById(
+                "loginUsername"
+            ).value.trim();
+
+        const password =
+            document.getElementById(
+                "loginPassword"
+            ).value.trim();
+
+        const user =
+            users.find(function(u) {
+
+                  return u.username.toLowerCase() === username.toLowerCase() &&
+                       u.password === password;
+
+            });
+
+
+        if (!user) {
+
+            document.getElementById(
+                "loginError"
+            ).innerText =
+                "Invalid username or password.";
+
+            return;
+        }
+
+
+        if (user.username === "admin") {
+            sessionStorage.setItem("adminAuthenticated", "true");
+            window.location.assign("admin.html");
+            return;
+        }
+
+
+        if (user.completed) {
+
+            document.getElementById(
+                "loginError"
+            ).innerText =
+                "This participant has already completed the quiz.";
+
+            return;
+        }
+
+
+        currentUser = user;
+
+        window.location.assign(
+            "question.html?user=" +
+            encodeURIComponent(user.username)
+        );
+    }
+
+
+    // Admin login
+    function adminLogin() {
+
+        const username =
+            document.getElementById(
+                "loginUsername"
+            ).value.trim();
+
+        const password =
+            document.getElementById(
+                "loginPassword"
+            ).value.trim();
+
+        const admin =
+            users.find(function(u) {
+
+                  return u.username.toLowerCase() === "admin" &&
+                       u.password === password;
+
+            });
+
+
+        if (username !== "admin" || !admin) {
+
+            document.getElementById(
+                "loginError"
+            ).innerText =
+                "Invalid admin username or password.";
+
+            return;
+        }
+
+
+        sessionStorage.setItem("adminAuthenticated", "true");
+        window.location.assign("admin.html");
+    }
+
+
+    // Submit quiz
+    function submitQuiz() {
+
+        const answers = {
+
+            q1: "A",
+            q2: "B",
+            q3: "C",
+            q4: "B",
+            q5: "A"
+
+        };
+
+        let score = 0;
+
+
+        for (let question in answers) {
+
+            const selected =
+                document.querySelector(
+                    'input[name="' +
+                    question +
+                    '"]:checked'
+                );
+
+            if (selected &&
+                selected.value === answers[question]) {
+
+                score++;
+            }
+        }
+
+
+        currentUser.score = score;
+        currentUser.completed = true;
+
+        const scores = JSON.parse(localStorage.getItem("quizScores") || "[]");
+        scores.push({ name: currentUser.username, score });
+        scores.sort((first, second) => Number(second.score) - Number(first.score));
+        localStorage.setItem("quizScores", JSON.stringify(scores.slice(0, 10)));
+
+
+        document.getElementById(
+            "quizPage"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "resultPage"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "resultUser"
+        ).innerText =
+            currentUser.username;
+
+
+        document.getElementById(
+            "score"
+        ).innerText =
+            "Your result will be reviewed by the administrator.";
+    }
+
+
+    // Allow next participant to login
+    function nextParticipant() {
+
+        document.getElementById(
+            "resultPage"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "loginPage"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "loginUsername"
+        ).value = "";
+
+
+        document.getElementById(
+            "loginPassword"
+        ).value = "";
+
+
+        document.getElementById(
+            "loginError"
+        ).innerText = "";
+    }
+
+</script>
+
+</body>
+</html>
