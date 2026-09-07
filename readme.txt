@@ -3,7 +3,7 @@ COMPUTER QUIZ WEBSITE
 
 Website links
 -------------
-- Public website: https://mrna-screenshot-net-steady.trycloudflare.com/
+- Public website: https://computer-quiz-2fi4.onrender.com/
 - Public QR code: [Open QR code image](quiz-website-qr.png)
 
 	![Quiz website QR code](quiz-website-qr.png)
